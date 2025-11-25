@@ -1,0 +1,160 @@
+USE Soccer_analysis_Db1;
+GO
+
+---------------------------------------------------------------------------------------------------------------------
+--1. View the first 100 rows of the dataset to understand its structure. 
+
+SELECT TOP 100 *
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced];
+GO
+
+-----------------------------------------------------------------------------------------------------------------------
+--2.Total number of players in the dataset
+
+SELECT COUNT(*) AS total_players
+ FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced];
+ GO
+
+ ----------------------------------------------------------------------------------------------------------------------
+ --3.List all unique teams in the league. 
+
+ SELECT DISTINCT team
+ FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced];
+
+ 
+ ---------------------------------------------------------------------------------------------------------------------
+ --4.Count how many players are in each team. 
+
+ SELECT team, COUNT(*) AS players_per_team
+ FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+ Group By team
+ ORDER BY players_per_team DESC;
+ GO
+ -----------------------------------------------------------------------------------------------------------------------
+ --5.Identify the top 10 players with the most goals. 
+
+ SELECT TOP 10 player_name,
+ team,
+ goals
+ FROM[Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+ ORDER BY goals DESC;
+ GO
+
+ --------------------------------------------------------------------------------------------------------------------------
+ --6.	Find the average salary for players in each team. 
+ 
+SELECT team, AVG(average_salary_zar) AS avg_salary 
+ FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY team;
+GO
+------------------------------------------------------------------------------------------------------------------------
+--7.	Retrieve the top 10 players with the highest market value. 
+
+SELECT TOP 10 player_name , market_value_zar
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+ORDER BY market_value_zar DESC;
+GO
+--------------------------------------------------------------------------------------------------------------------------
+-- 8.	Calculate the average passing accuracy for each position
+
+SELECT position, AVG(passing_accuracy) AS avg_passing_accuracy 
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY position ;
+GO
+-------------------------------------------------------------------------------------------------------------------------
+-- 9.	Compare shot accuracy with goals to find correlations
+
+SELECT player_name, goals,shot_accuracy
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+ORDER BY shot_accuracy DESC;
+GO
+-------------------------------------------------------------------------------------------------------------------------
+-- 10.	Compute total goals and assists for each team
+
+SELECT team,
+SUM(goals) AS total_goals,
+SUM(assists) AS total_assists
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY team
+ORDER BY total_goals DESC ;
+GO
+------------------------------------------------------------------------------------------------------------------------------
+--11.	Count players by their marital status
+
+SELECT marital_status, COUNT(*) AS total
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY marital_status;
+GO
+------------------------------------------------------------------------------------------------------------------------------
+--12.	Count players by nationality. 
+
+SELECT nationality ,COUNT(*) AS total_players
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY nationality
+ORDER BY total_players DESC;
+GO
+------------------------------------------------------------------------------------------------------------------------------
+--13.	Find average market value grouped by nationality. 
+
+SELECT nationality , AVG(market_value_zar) AS avg_market_value
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY nationality
+ORDER BY avg_market_value DESC ;
+GO
+--------------------------------------------------------------------------------------------------------------------------------
+--14.	Determine how many player contracts end in each year. 
+
+SELECT contract_end_year ,COUNT (*) AS players_expiring
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY contract_end_year
+ORDER BY contract_end_year;
+GO
+------------------------------------------------------------------------------------------------------------------------------------
+--15.	Identify players whose contracts end next year. 
+
+SELECT player_name 
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+WHERE contract_end_year = year + 1;
+GO
+-------------------------------------------------------------------------------------------------------------------------------------
+-- 16.	Summarize the number of players by injury status. 
+
+SELECT injury_status ,COUNT(*) AS total_players
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY injury_status;
+
+---------------------------------------------------------------------------------------------------------------------------------------
+--17.	Calculate goals per match ratio for each player. 
+
+SELECT player_name, goals / NULLIF(matches_played, 0) AS goals_per_match
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+WHERE matches_played > 0
+ORDER BY goals_per_match DESC;
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+--18.	Count how many players are managed by each agent. 
+
+SELECT agent, COUNT(*) AS total_players
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY agent
+ORDER BY total_players DESC;
+
+------------------------------------------------------------------------------------------------------------------------------------------
+--19.	Calculate average height and weight by player position
+
+SELECT position ,
+AVG(height_cm) AS avg_height,
+AVG(weight_kg) AS avg_weight
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+GROUP BY position;
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+--20.	Identify players with the highest combined goals and assists. 
+
+SELECT TOP 10
+player_name,
+       goals,
+	   assists,
+	   (goals + assists) AS total_contributions
+FROM [Soccer_analysis_Db1].[dbo].[ketro_sa_soccer_dataset_advanced]
+ORDER BY goals + assists DESC;
